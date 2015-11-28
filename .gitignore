@@ -1,0 +1,19 @@
+.*~
+.*.swp
+.idea
+*.iml
+.python-version
+frontend/*/dist
+frontend/*/tmp
+frontend/*/bower_components/
+frontend/*/npm_modules/
+frontend/*/vendor
+
+
+# misc
+frontend/*/.sass-cache
+frontend/*/connect.lock
+frontend/*/coverage/*
+frontend/*/libpeerconnection.log
+frontend/*/npm-debug.log
+frontend/*/testem.log
