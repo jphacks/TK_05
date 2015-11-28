@@ -58,7 +58,6 @@ class Answer(BaseModel):
 class Flag(BaseModel):
     question = models.ForeignKey(Question, verbose_name="問題")
     flag = models.TextField("フラグ")
-    exp = models.IntegerField("経験値", default=0)
     point = models.IntegerField("点数")
 
 
