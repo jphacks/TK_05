@@ -10,11 +10,14 @@ class BaseModel(models.Model):
         abstract = True
 
 
+class Icon(BaseModel):
+    file = models.ImageField("アイコン", upload_to='./icons', null=True, default=None, blank=True)
+
 class User(AbstractUser, BaseModel):
     points = models.IntegerField("得点", default=0, blank=True)
     last_scored = models.DateTimeField("最終得点日時",  default=None, blank=True)
     screen_name = models.CharField("表示名", unique=True, max_length=30)
-    icon = models.ImageField("アイコン", upload_to='./icons', null=True, default=None, blank=True)
+    icon = models.ForeignKey(Icon, verbose_name="アイコン")
 
 class Service(BaseModel):
     name = models.CharField("サービス名", max_length=30)

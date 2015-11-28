@@ -2,7 +2,7 @@
 .*.swp
 .idea
 *.iml
-.python_version
+.python-version
 frontend/*/dist
 frontend/*/bower_components/
 frontend/*/npm_modules/
