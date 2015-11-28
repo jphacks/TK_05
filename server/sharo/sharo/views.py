@@ -18,7 +18,7 @@ class AuthViewSet(viewsets.ViewSet):
     def list(self, request, *args, **kwargs):
         if request.user.is_authenticated():
             return Response(UserSerializer(request.user).data)
-        raise NotAuthenticated(detail="You need login.")
+        raise NotAuthenticated(detail="Authenticate required.")
 
     def create(self, request, *args, **kwargs):
         if request.user.is_authenticated():
