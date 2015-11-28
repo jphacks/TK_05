@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.urlresolvers import reverse
 from django.db import models
 
 
@@ -68,6 +69,10 @@ class File(BaseModel):
     is_public = models.BooleanField("公開するか", default=False, blank=True)
     is_delete = models.BooleanField("削除", default=False, blank=True)
 
+    @property
+    def url(self):
+        return reverse("download_file", args=(self.id, self.name))
+
 
 class Importance(BaseModel):
     priority = models.IntegerField("重要度")
@@ -92,6 +97,6 @@ class WriteUp(BaseModel):
 class Comment(BaseModel):
     body = models.TextField("本文")
     user = models.ForeignKey(User, verbose_name="ユーザ")
-    question = models.ForeignKey(Question, verbose_name="問題")
+    writeup= models.ForeignKey(WriteUp, verbose_name="WriteUp")
     is_public = models.BooleanField("公開するか", blank=True, default=False)
     is_delete = models.BooleanField("削除", blank=True, default=False)
