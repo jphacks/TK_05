@@ -28,11 +28,6 @@ class AuthToken(BaseModel):
     service = models.ForeignKey(Service, verbose_name="サービス")
     token = models.CharField("トークン", max_length=128)
 
-class Stage(BaseModel):
-    name = models.CharField("ステージ名", max_length=255, unique=True)
-    description = models.TextField("説明", blank=True)
-    required_points = models.IntegerField("キーポイント")
-
 
 class Category(BaseModel):
     name = models.CharField("カテゴリ名", max_length=255, unique=True)
@@ -55,12 +50,22 @@ class Question(BaseModel):
 
     objects = QuestionManager()
 
+class Stage(BaseModel):
+    name = models.CharField("ステージ名", max_length=255, unique=True)
+    description = models.TextField("説明", blank=True)
+    required_points = models.IntegerField("キーポイント")
+    required_question = models.ForeignKey(Question, verbose_name="キー問題")
+
 
 class Answer(BaseModel):
     user = models.ForeignKey(User, verbose_name="ユーザ")
     question = models.ForeignKey(Question, verbose_name="問題")
     answer = models.TextField("解答")
-    is_correct = models.BooleanField("正解か否か", default=False, blank=True)
+    flag = models.ForeignKey(Flag, verbose_name="フラグ", null=True)
+
+    @property
+    def is_correct(self):
+        return not self.flag
 
 
 class Flag(BaseModel):
