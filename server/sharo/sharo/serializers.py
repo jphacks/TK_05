@@ -49,11 +49,11 @@ class AnswerSerializer(serializers.ModelSerializer):
         except models.Flag.DoesNotExist:
             answer = Answer(user=login_user, question=question, flag=None)
             answer.save()
-            raise serializers.ValidationError(message="The answer isn't correct.")
+            raise serializers.ValidationError(detail="The answer isn't correct.")
 
         # 重複防止
         if flag and Flag.objects.filter(user=login_user, flag=flag):
-            raise serializers.ValidationError(detail="Your answer had answered.")
+            raise serializers.ValidationError(detail="This flag had been submitted.")
 
         return data
 
