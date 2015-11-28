@@ -1,7 +1,8 @@
 from rest_framework import viewsets, filters, mixins
 from rest_framework.permissions import IsAuthenticated
 
-from sharo.serializers import QuestionSerializer, StageSerializer, CategorySerializer, AnswerSerializer
+from sharo.serializers import QuestionSerializer, StageSerializer, CategorySerializer, AnswerSerializer, \
+    AdminAnswerSerializer
 
 
 class QuestionReadOnlyViewSet(viewsets.ReadOnlyModelViewSet):
@@ -28,3 +29,7 @@ class AnswerWriteOnlyViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
     permission_classes = (IsAuthenticated,)
 
 
+class AdminAnswerReadOnlyViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = AdminAnswerSerializer
+    queryset = serializer_class.Meta.model.objects.all()
+    permission_classes =

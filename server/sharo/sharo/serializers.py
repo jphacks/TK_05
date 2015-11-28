@@ -1,17 +1,51 @@
 from datetime import datetime
 
+from django.contrib.auth import login
 from rest_framework import serializers
 
 from sharo import models
-from sharo.models import Flag, Answer
+from sharo.models import Flag, Answer, User
 
 
-class UserSerializers(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        field = ('id', 'screen_name', 'email', 'points', 'icon', 'last_scored')
+        fields = ('id', 'screen_name', 'email', 'points', 'icon', 'last_scored', 'is_staff')
         read_only_fields = ('id', 'points', 'last_scored')
+        extra_kwargs = {"password": {"write_only":True}}
 
+    def validate(self, data):
+        is_staff = data.pop('is_staff', False)
+        user = self.context.get('request').user
+
+        if is_staff and not user.is_staff:
+            raise serializers.ValidationError(detail="You don't have permission, Are you BlackHat? ;(")
+
+        data['is_staff'] = is_staff
+
+        return data
+
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+
+        user = User(validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+
+        # login new user
+        login(request, user)
+
+        return user
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop('password', None)
+        i = super(UserSerializer, self).update(instance, validated_data)
+        if password:
+            i.set_password(password)
+        i.save()
+
+        return i
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
