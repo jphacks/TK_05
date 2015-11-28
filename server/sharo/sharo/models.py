@@ -95,7 +95,7 @@ class WriteUp(BaseModel):
     is_delete = models.BooleanField("削除", blank=True, default=False)
 
 class Comment(BaseModel):
-    body = models.TextField("本文")
+    body = models.CharField("本文", max_length=65535)
     user = models.ForeignKey(User, verbose_name="ユーザ")
     writeup= models.ForeignKey(WriteUp, verbose_name="WriteUp")
     is_public = models.BooleanField("公開するか", blank=True, default=False)
