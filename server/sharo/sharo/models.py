@@ -39,6 +39,11 @@ class Category(BaseModel):
     description = models.TextField("説明", blank=True)
 
 
+class QuestionManager(models.Manager):
+    def public(self):
+        return self.get_queryset().filter(is_delete=False).filter(is_public=True)
+
+
 class Question(BaseModel):
     number = models.IntegerField("問題番号", unique=True)
     title = models.CharField("問題名", max_length=255)
@@ -47,6 +52,8 @@ class Question(BaseModel):
     category = models.ForeignKey(Category, verbose_name="カテゴリ")
     is_public = models.BooleanField("公開するか", default=False, blank=True)
     is_delete = models.BooleanField("削除", default=False, blank=True)
+
+    objects = QuestionManager()
 
 
 class Answer(BaseModel):
