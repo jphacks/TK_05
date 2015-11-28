@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from sharo import models
+from sharo.models import Flag, Answer
 
 
 class UserSerializers(serializers.ModelSerializer):
@@ -22,18 +23,31 @@ class StageSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('id', 'updated_at', 'created_at')
 
-#TODO: Admin's QuestionSerializerを実装する
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Question
         fields = "__all__"
         read_only_fields = "__all__"
 
-class AnswerSerializer(serializers.ModelSerializer):
+class AdminAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Answer
         fields = "__all__"
         read_only_fields = "__all__"
+
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Answer
+        fields = ("question", "answer")
+
+    def validate(self, data):
+        question = data['question']
+        login_user = self.context.get('request').user
+
+        try:
+            flag = Flag.objects.get(question=question, flag=data['answer'])
+        except models.Flag.DoesNotExist:
+            answer = Answer(user=login_user, question=question, )
 
 class FlagSerializer(serializers.ModelSerializer):
     class Meta:
