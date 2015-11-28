@@ -44,7 +44,7 @@ class FlagSerializer(serializers.ModelSerializer):
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.File
-        fields = ('id', 'name', 'url', 'question')
+        fields = ('id', 'name', 'url', 'question', 'updated_at', 'created_at')
         read_only_fields = ('id', 'url', 'updated_at', 'created_at')
 
 class ImportanceSerializer(serializers.ModelSerializer):
@@ -70,4 +70,4 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Comment
         fields = "__all__"
-        read_only_fields = ('is', 'created_at', 'updated_at')
+        read_only_fields = ('id', 'created_at', 'updated_at')
