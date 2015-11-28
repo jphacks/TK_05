@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.urlresolvers import reverse
 from django.db import models
 
 
@@ -10,11 +11,14 @@ class BaseModel(models.Model):
         abstract = True
 
 
+class Icon(BaseModel):
+    file = models.ImageField("アイコン", upload_to='./icons', null=True, default=None, blank=True)
+
 class User(AbstractUser, BaseModel):
     points = models.IntegerField("得点", default=0, blank=True)
     last_scored = models.DateTimeField("最終得点日時",  default=None, blank=True)
     screen_name = models.CharField("表示名", unique=True, max_length=30)
-    icon = models.ImageField("アイコン", upload_to='./icons', null=True, default=None, blank=True)
+    icon = models.ForeignKey(Icon, verbose_name="アイコン")
 
 class Service(BaseModel):
     name = models.CharField("サービス名", max_length=30)
@@ -55,7 +59,6 @@ class Answer(BaseModel):
 class Flag(BaseModel):
     question = models.ForeignKey(Question, verbose_name="問題")
     flag = models.TextField("フラグ")
-    exp = models.IntegerField("経験値", default=0)
     point = models.IntegerField("点数")
 
 
@@ -65,6 +68,10 @@ class File(BaseModel):
     question = models.ForeignKey(Question, verbose_name="問題")
     is_public = models.BooleanField("公開するか", default=False, blank=True)
     is_delete = models.BooleanField("削除", default=False, blank=True)
+
+    @property
+    def url(self):
+        return reverse("download_file", args=(self.id, self.name))
 
 
 class Importance(BaseModel):
@@ -90,6 +97,6 @@ class WriteUp(BaseModel):
 class Comment(BaseModel):
     body = models.TextField("本文")
     user = models.ForeignKey(User, verbose_name="ユーザ")
-    question = models.ForeignKey(Question, verbose_name="問題")
+    writeup= models.ForeignKey(WriteUp, verbose_name="WriteUp")
     is_public = models.BooleanField("公開するか", blank=True, default=False)
     is_delete = models.BooleanField("削除", blank=True, default=False)
