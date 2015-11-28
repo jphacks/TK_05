@@ -15,6 +15,8 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# AuthUserModel
+AUTH_USER_MODEL = 'sharo.User'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -71,6 +73,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sharo.wsgi.application'
 
+# filtering
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
+}
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
