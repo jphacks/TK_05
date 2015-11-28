@@ -9,6 +9,7 @@ Router.map(function() {
   this.route('about');
   this.route('questions');
   this.route('ranking');
+  this.route('notice');
 });
 
 export default Router;
