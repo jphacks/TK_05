@@ -1,0 +1,9 @@
+.*~
+.*.swp
+.idea
+*.iml
+.python_version
+frontend/*/dist
+frontend/*/bower_components/
+frontend/*/npm_modules/
+frontend/*/vendor
