@@ -1,20 +1,47 @@
+from django.contrib.auth import logout, authenticate, login
 from rest_framework import viewsets, filters, mixins
-from rest_framework.exceptions import AuthenticationFailed, PermissionDenied
+from rest_framework.exceptions import AuthenticationFailed, PermissionDenied, NotAuthenticated
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.response import Response
 
-from sharo.models import Flag, Answer
+from sharo.models import Flag, Answer, User
 from sharo.permissions import IsStaff
 from sharo.serializers import QuestionSerializer, StageSerializer, CategorySerializer, AnswerSerializer, \
     AdminAnswerSerializer, FlagSerializer, FileSerializer, ImportanceSerializer, NoticeSerializer, WriteUpSerializer, \
-    CommentSerializer
+    CommentSerializer, UserSerializer
 
 
 # FIXME: 関数レベルでIsStaffを確認するデコレータを作る
 # FIXME: というかStaffならEditを許可するViewSetを作る
 
 class AuthViewSet(viewsets.ViewSet):
-    def list(self):
-        pass
+    def list(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return Response(UserSerializer(request.user).data)
+        raise NotAuthenticated(detail="You need login.")
+
+    def create(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            logout(request)
+
+        e = request.data.pop("email", None)
+        p = request.data.pop("password", None)
+        if not e or not p:
+            raise AuthenticationFailed(detail="You must fill email or password field")
+        try:
+            target_user = User.objects.get(email=e)
+        except User.DoesNotExist:
+            raise AuthenticationFailed(detail="Login failed.")
+        u = authenticate(username=target_user.username, password=p)
+        if u and u.is_active:
+            login(request, u)
+        else:
+            raise AuthenticationFailed(detail="Login failed.")
+        return Response(UserSerializer(u).data)
+
+    def desroy(self, request, *args, **kwargs):
+        logout(request)
+        return self.list(request, *args, **kwargs)
 
 
 class QuestionViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin):

@@ -1,8 +1,6 @@
 from datetime import datetime
-
 from django.contrib.auth import login
 from rest_framework import serializers
-
 from sharo import models
 from sharo.models import Flag, Answer, User
 
@@ -12,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = models.User
         fields = ('id', 'screen_name', 'email', 'points', 'icon', 'last_scored', 'is_staff')
         read_only_fields = ('id', 'points', 'last_scored')
-        extra_kwargs = {"password": {"write_only":True}}
+        extra_kwargs = {"password": {"write_only": True}}
 
     def validate(self, data):
         is_staff = data.pop('is_staff', False)
@@ -25,11 +23,12 @@ class UserSerializer(serializers.ModelSerializer):
 
         return data
 
-
     def create(self, validated_data):
         request = self.context.get('request')
 
-        user = User(validated_data)
+        username = validated_data['email']
+
+        user = User(validated_data, username=username)
         user.set_password(validated_data['password'])
         user.save()
 
@@ -54,11 +53,13 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('id', 'updated_at', 'created_at')
 
+
 class StageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Stage
         fields = '__all__'
         read_only_fields = ('id', 'updated_at', 'created_at')
+
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -66,11 +67,13 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ('id', 'updated_at', 'created_at')
 
+
 class AdminAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Answer
         fields = "__all__"
         read_only_fields = "__all__"
+
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -113,11 +116,13 @@ class AnswerSerializer(serializers.ModelSerializer):
 
         return a
 
+
 class FlagSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Flag
         fields = "__all__"
         read_only_fields = ('id', 'updated_at', 'created_at')
+
 
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -125,11 +130,13 @@ class FileSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'url', 'question', 'updated_at', 'created_at')
         read_only_fields = ('id', 'url', 'updated_at', 'created_at')
 
+
 class ImportanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Importance
         fields = ('id', 'priority', 'name')
-        read_only_fields = ('id', )
+        read_only_fields = ('id',)
+
 
 class NoticeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -137,12 +144,14 @@ class NoticeSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ('id', 'updated_at', 'created_at')
 
-#TODO: Admin's WriteUpSerializerを実装する
+
+# TODO: Admin's WriteUpSerializerを実装する
 class WriteUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.WriteUp
         fields = "__all__"
         read_only_fields = ('id', 'updated_at', 'created_at')
+
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
