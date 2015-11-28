@@ -47,6 +47,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         return i
 
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Category
@@ -63,7 +64,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Question
         fields = "__all__"
-        read_only_fields = "__all__"
+        read_only_fields = ('id', 'updated_at', 'created_at')
 
 class AdminAnswerSerializer(serializers.ModelSerializer):
     class Meta:
