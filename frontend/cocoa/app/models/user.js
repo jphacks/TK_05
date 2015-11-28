@@ -7,5 +7,5 @@ export default DS.Model.extend({
 	points:  DS.attr('number'),
 	last_scored: DS.attr('date'),
 	screen_name: DS.attr('string'),
-	icon: DS.attr('string')
+	icon: DS.belongsTo('icon')
 });
