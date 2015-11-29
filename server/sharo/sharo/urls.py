@@ -15,7 +15,25 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from rest_framework.routers import DefaultRouter
+
+from sharo.views import AuthViewSet, QuestionViewSet, StageViewSet, CategoryViewSet, AnswerWriteOnlyViewSet, \
+    FlagModelViewSet, FileReadOnlyViewSet, ImportanceViewSet, NoticeViewSet, WriteUpViewSet, CommentViewSet
+
+router = DefaultRouter()
+router.register(r'auth', AuthViewSet)
+router.register(r'questions', QuestionViewSet)
+router.register(r'stages', StageViewSet)
+router.register(r'categories', CategoryViewSet)
+router.register(r'answers', AnswerWriteOnlyViewSet)
+router.register(r'flags', FlagModelViewSet)
+router.register(r'files', FileReadOnlyViewSet)
+router.register(r'importance', ImportanceViewSet)
+router.register(r'notices', NoticeViewSet)
+router.register(r'writeups', WriteUpViewSet)
+router.register(r'comments', CommentViewSet)
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^api/', include(router.urls, namespace='api')),
 ]
