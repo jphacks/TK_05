@@ -112,7 +112,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 class AnswerWriteOnlyViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
     serializer_class = AnswerSerializer
-    queryset = serializer_class.Meta.model.objects.all(id=-1)
+    queryset = serializer_class.Meta.model.objects.all()
     permission_classes = (IsAuthenticated,)
 
 

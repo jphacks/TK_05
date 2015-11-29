@@ -21,7 +21,7 @@ from sharo.views import AuthViewSet, QuestionViewSet, StageViewSet, CategoryView
     FlagModelViewSet, FileReadOnlyViewSet, ImportanceViewSet, NoticeViewSet, WriteUpViewSet, CommentViewSet
 
 router = DefaultRouter()
-router.register(r'auth', AuthViewSet)
+router.register(r'auth', AuthViewSet, base_name='auth')
 router.register(r'questions', QuestionViewSet)
 router.register(r'stages', StageViewSet)
 router.register(r'categories', CategoryViewSet)
